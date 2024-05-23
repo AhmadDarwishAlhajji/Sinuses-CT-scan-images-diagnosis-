@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CT Scan Image Viewer</title>
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        .bg-video {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -1;
+        }
+
+        .content {
+            position: relative;
+            z-index: 1;
+            color: white;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .file-input-wrapper {
+            display: inline-block;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            background-color: #4CAF50;
+            color: white;
+            padding: 15px 32px;
+            text-align: center;
+            text-decoration: none;
+            font-size: 16px;
+            border: none;
+            border-radius: 12px;
+            transition: background-color 0.3s, transform 0.3s;
+            margin-top: 20px;
+        }
+
+        .file-input-wrapper:hover {
+            background-color: #45a049;
+            transform: scale(1.05);
+        }
+
+        .file-input-wrapper:active {
+            transform: scale(1);
+        }
+
+        .file-input-wrapper input[type="file"] {
+            font-size: 100px;
+            position: absolute;
+            left: 0;
+            top: 0;
+            opacity: 0;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 15px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+            border: none;
+            border-radius: 12px;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        button:hover {
+            background-color: #45a049;
+            transform: scale(1.05);
+        }
+
+        button:active {
+            transform: scale(1);
+        }
+
+        #file-count {
+            margin-top: 10px;
+            font-size: 16px;
+        }
+
+        #error-message {
+            margin-top: 10px;
+            font-size: 16px;
+            color: red;
+            display: none;
+        }
+
+        #image-preview {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .image-preview-item {
+            margin: 10px;
+        }
+
+        .image-preview-item img {
+            max-width: 200px;
+            max-height: 200px;
+            border: 2px solid white;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+    <video class="bg-video" autoplay loop muted>
+        <source src="https://cdn.pixabay.com/video/2021/04/04/69951-538962240_large.mp4" type="video/mp4">
+        Your browser does not support HTML5 video.
+    </video>
+    <div class="content">
+        <h1>CT Scan Image Viewer</h1>
+        <form id="uploadForm" method="post" enctype="multipart/form-data" onsubmit="return validateForm()">
+            <label class="file-input-wrapper">
+                Choose Files
+                <input type="file" name="files" accept=".png,.jpg,.jpeg" multiple required onchange="updateFileCount()">
+            </label>
+            <div id="file-count">No files chosen</div>
+            <button type="submit" id="uploadButton" title="Please choose at least one file before uploading.">Upload</button>
+        </form>
+        <div id="image-preview"></div>
+    </div>
+    <script>
+        function updateFileCount() {
+            const input = document.querySelector('input[type="file"]');
+            const fileCount = document.getElementById('file-count');
+            const count = input.files.length;
+            fileCount.textContent = count === 0 ? 'No files chosen' : `${count} file(s) chosen`;
+            // Update the upload button title based on file selection
+            const uploadButton = document.getElementById('uploadButton');
+            if (count > 0) {
+                uploadButton.title = '';
+                previewImages(input.files);
+            } else {
+                uploadButton.title = 'Please choose at least one file before uploading.';
+                document.getElementById('image-preview').innerHTML = '';
+            }
+        }
+
+        function previewImages(files) {
+            const preview = document.getElementById('image-preview');
+            preview.innerHTML = '';
+            Array.from(files).forEach(file => {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const img = document.createElement('img');
+                    img.src = e.target.result;
+                    const div = document.createElement('div');
+                    div.className = 'image-preview-item';
+                    div.appendChild(img);
+                    preview.appendChild(div);
+                };
+                reader.readAsDataURL(file);
+            });
+        }
+
+        function validateForm() {
+            const input = document.querySelector('input[type="file"]');
+            if (input.files.length === 0) {
+                return false;
+            }
+            return true;
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CT Scan Image Result</title>
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        .bg-video {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -1;
+        }
+
+        .content {
+            position: relative;
+            z-index: 1;
+            color: white;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .content h1 {
+            font-size: 40px; /* Adjust this value to make the title text bigger or smaller */
+        }
+
+        .content p {
+            font-size: 20px; /* Adjust this value to make the text bigger or smaller */
+        }
+
+        .button {
+            background-color: #4CAF50;
+            border: none;
+            color: white;
+            padding: 15px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+            border-radius: 12px;
+        }
+
+        .button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <video class="bg-video" autoplay loop muted>
+        <source src="https://cdn.pixabay.com/video/2021/04/04/69951-538962240_large.mp4" type="video/mp4">
+        Your browser does not support HTML5 video.
+    </video>
+    <div class="content">
+        <h1>CT Scan Image Result</h1>
+        <p>Decision: {{ decision }}</p>
+        <p>Count of Class 0: {{ count_0 }}</p>
+        <p>Count of Class 1: {{ count_1 }}</p>
+        <a href="{{ url_for('index') }}" class="button">Upload another image</a>
+    </div>
+</body>
+</html>
